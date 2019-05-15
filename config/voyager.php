@@ -149,7 +149,7 @@ return [
         ],
 
         'widgets' => [
-
+                'App\\Widgets\\Users',
         ],
 
     ],
