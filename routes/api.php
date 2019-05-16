@@ -32,4 +32,8 @@ Route::post('/send_otp','API\OtpController@send_otp');
 /** end auth routes */
 
 
-Route::get('/posts', 'API\PostController@index');
+//Route::get('/posts', 'API\PostController@index');
+
+Route::get('/prepare_questions', 'API\QuestionController@prepare_questions');
+Route::get('/get_question', 'API\QuestionController@get_question');
+
