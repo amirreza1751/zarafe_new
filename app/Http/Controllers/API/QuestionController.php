@@ -22,8 +22,8 @@ class QuestionController extends Controller
             ],200);
         }
         $counter = 0;
-        $prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->whereDate('created_at', Carbon::today())->count();
-        if (TonightQuestion::where('user_id', $user_id)->where('used', '0')->whereDate('created_at', Carbon::today())->count() == 10){
+        $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('created_at', Carbon::today())->count();
+        if (TonightQuestion::where('user_id', $user_id)->whereDate('created_at', Carbon::today())->count() == 10){
             return response()->json([
                 'status' => '200',
                 'message' => 'tonight questions have been created.'
