@@ -34,8 +34,9 @@ Route::post('/send_otp','API\OtpController@send_otp');
 
 //Route::get('/posts', 'API\PostController@index');
 
-Route::middleware('auth:api')->get('/prepare_questions', 'API\QuestionController@prepare_questions');
-Route::middleware('auth:api')->get('/get_question', 'API\QuestionController@get_question');
-Route::middleware('auth:api')->get('/send_answer', 'API\QuestionController@send_answer');
+Route::get('/prepare_questions', 'API\QuestionController@prepare_questions');
+Route::get('/get_question', 'API\QuestionController@get_question');
+Route::get('/send_answer', 'API\QuestionController@send_answer');
+Route::get('/results', 'API\QuestionController@results');
 
 Route::get('/test', 'API\QuestionController@test');
