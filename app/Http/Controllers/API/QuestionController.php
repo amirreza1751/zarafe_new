@@ -20,7 +20,7 @@ class QuestionController extends Controller
         $user_id = 11;
         /** create_user_score() creates this user score if is not created. */
         app('App\Http\Controllers\QuestionController')->create_user_score($user_id);
-        $check_for_answer_limitation = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('created_at', Carbon::today())->count();
+        $check_for_answer_limitation = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
         if ($check_for_answer_limitation >=10){
             return response()->json([
                 'status' => '200',
@@ -28,8 +28,8 @@ class QuestionController extends Controller
             ],200);
         }
         $counter = 0;
-        $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('created_at', Carbon::today())->count();
-        if (TonightQuestion::where('user_id', $user_id)->whereDate('created_at', Carbon::today())->count() == 10){
+        $prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count();
+        if (TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() == 10){
             return response()->json([
                 'status' => '200',
                 'message' => 'tonight questions have been created.'
@@ -63,8 +63,8 @@ class QuestionController extends Controller
             ]);
         }
 
-        if (TonightQuestion::where('user_id', $user_id)->where('used', '0')->whereDate('created_at', Carbon::today())->count() < 10){
-            $number = TonightQuestion::where('user_id', $user_id)->where('used', '0')->whereDate('created_at', Carbon::today())->count();
+        if (TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() < 10){
+            $number = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count();
             if ($number == 0){
                 return response()->json([
                     'status' => '120',
