@@ -4,11 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Question;
 use App\Result;
+use App\Score;
 use App\TonightQuestion;
 use App\UsedQuestion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 class QuestionController extends Controller
 {
@@ -16,6 +18,8 @@ class QuestionController extends Controller
     {
 //        $user_id = auth('api')->user()->id;
         $user_id = 11;
+        /** create_user_score() creates this user score if is not created. */
+        app('App\Http\Controllers\QuestionController')->create_user_score($user_id);
         $check_for_answer_limitation = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('created_at', Carbon::today())->count();
         if ($check_for_answer_limitation >=10){
             return response()->json([
@@ -80,6 +84,19 @@ class QuestionController extends Controller
             ], 200);
         }
 
+    }
+
+    public function create_user_score($user_id)
+    {
+        $user_score = Score::where('user_id', $user_id)->first();
+        if ($user_score != null){
+            return $user_score;
+        } else {
+            return Score::create([
+                'score' => '0',
+                'user_id' => $user_id
+            ]);
+        }
     }
 
 
@@ -148,6 +165,10 @@ class QuestionController extends Controller
                 'status' => 'timeout'
             ]);
         } elseif ($answer == $result->question->correct_answer){ /** in-time answer. now check the answer */
+                /** correct answer */
+                $user_score = Score::where('user_id', $user_id)->first();
+                $user_score->score += $result->question->question_time->score; /** add score to user */
+                $user_score->save();
 
             return Result::create([
                     'user_id' => $user_id,
@@ -157,14 +178,14 @@ class QuestionController extends Controller
                 ]);
 
 
-                return response()->json([
-                    'answer time' => $time,
-                    'question send time' => $result->time,
-                    'subtract' => $time - $result->time,
-                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
-                    'status' => 'correct answer'
-                ]);
-            } else{
+//                return response()->json([
+//                    'answer time' => $time,
+//                    'question send time' => $result->time,
+//                    'subtract' => $time - $result->time,
+//                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
+//                    'status' => 'correct answer'
+//                ]);
+            } else{ /** incorrect answer */
 
             return Result::create([
                     'user_id' => $user_id,
@@ -173,13 +194,13 @@ class QuestionController extends Controller
                     'answer' => $request->answer
                 ]);
 
-                return response()->json([
-                    'answer time' => $time,
-                    'question send time' => $result->time,
-                    'subtract' => $time - $result->time,
-                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
-                    'status' => 'incorrect answer'
-                ]);
+//                return response()->json([
+//                    'answer time' => $time,
+//                    'question send time' => $result->time,
+//                    'subtract' => $time - $result->time,
+//                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
+//                    'status' => 'incorrect answer'
+//                ]);
         }
 
     }
@@ -198,16 +219,24 @@ class QuestionController extends Controller
                 $tonight_score = $tonight_score + $result->question->question_time->score;
             }
         }
+        $total_score = Score::where('user_id', $user_id)->first()->score;
+        $rank = Score::where('user_id', $user_id)->first()->getRanking();
         return response()->json([
             'correct_answers' => $correct_answers,
-            'tonight_score' => $tonight_score
+            'tonight_score' => $tonight_score,
+            'total_score' => $total_score,
+            'rank' => $rank
         ]);
 
     }
 
     public function test(Request $request)
     {
-return Carbon::now();
+//        $score = Score::where('user_id', 11)->first()->getRanking();
+//        return $score;
+
+//        return Question::orderBy('id', 'DESC')->get();
+//return Carbon::now();
         //        return Question::where('id', '>', '4')->whereDate('created_at', Carbon::today())->get();
         $user_id = 11;
         $prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('created_at', Carbon::today())->count();
