@@ -11,9 +11,10 @@ class Score extends Model
         'user_id',
         'competition_id'
     ];
-    public function getPostionAttribute()
+
+    public function user()
     {
-        return $this->newQuery()->where('score', '>=', $this->score)->count();
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 
     public function getRanking(){

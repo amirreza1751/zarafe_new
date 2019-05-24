@@ -64,7 +64,8 @@ class AuthController extends Controller
 //
 //        $user->save();
         $user = User::create([
-            'phone_number' => $request->phone_number
+            'phone_number' => $request->phone_number,
+            'username' => app('App\Http\Controllers\AuthController')->random_username_generator(15)
         ]);
         $created_user = [
             'phone_number' => $user->phone_number,
@@ -145,5 +146,18 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         return response()->json($request->user());
+    }
+
+
+    public function random_username_generator($n) {
+        $characters = '123456789abcdefghijklmnopqrstuvwxyz_';
+        $randomString = '';
+
+        for ($i = 0; $i < $n; $i++) {
+            $index = mt_rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+
+        return $randomString;
     }
 }
