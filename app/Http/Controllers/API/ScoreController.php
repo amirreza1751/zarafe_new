@@ -10,7 +10,7 @@ class ScoreController extends Controller
 {
     public function leader_board()
     {
-        $leader_board = Score::with('user')->get();
-        return $leader_board;
+        $leader_board = Score::with('user')->orderBy('score', 'DESC')->get();
+        return response()->json($leader_board, 200);
     }
 }

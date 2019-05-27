@@ -16,24 +16,24 @@ class QuestionController extends Controller
 {
     public function prepare_questions()
     {
-//        $user_id = auth('api')->user()->id;
-        $user_id = 11;
+        $user_id = auth('api')->user()->id;
+//        $user_id = 11;
         /** create_user_score() creates this user score if is not created. */
         app('App\Http\Controllers\QuestionController')->create_user_score($user_id);
         $check_for_answer_limitation = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
         if ($check_for_answer_limitation >=10){
             return response()->json([
-                'status' => '200',
+                'status' => '111',
                 'message' => 'you have answered all of your questions today.'
-            ],200);
+            ],111);
         }
         $counter = 0;
-        $prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count();
-        if (TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() == 10){
+        /**  باید چک بشه*/     $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->orWhere('used', '0')->count();
+        if (TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->orWhere('used', '0')->count() == 10){
             return response()->json([
-                'status' => '200',
+                'status' => '112',
                 'message' => 'tonight questions have been created.'
-            ],200);
+            ],112);
         }
 
         for ($i=0;$i<10-$prepared_questions;$i++){
@@ -67,16 +67,16 @@ class QuestionController extends Controller
             $number = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count();
             if ($number == 0){
                 return response()->json([
-                    'status' => '120',
+                    'status' => '113',
                     'message' => 'there is no question for you.',
                     'count' => $number
-                ], 200);
+                ], 113);
             }
             return response()->json([
-                'status' => '120',
+                'status' => '114',
                 'message' => 'only '. $number . ' question(s) found.',
                 'count' => $number
-            ], 200);
+            ], 114);
         } else {
             return response()->json([
                 'status' => '200',
@@ -100,21 +100,19 @@ class QuestionController extends Controller
     }
 
 
-
-
     public function get_question()
     {
         $time = round(microtime(true) * 1000);
-//        $user_id = auth('api')->user()->id;
-        $user_id = 11;
+        $user_id = auth('api')->user()->id;
+//        $user_id = 11;
         $question = TonightQuestion::with('question')
             ->where('user_id', $user_id)
-            ->where('used', '0')->whereDate('created_at', Carbon::today())->first();
+            ->where('used', '0')->first();
         if ($question == null){
             return response()->json([
-                'status' => '400',
+                'status' => '115',
                 'message' => 'no question found.'
-            ], 400);
+            ], 115);
         }
         $question->time = $time;
         $question->used = '1';
@@ -132,17 +130,17 @@ class QuestionController extends Controller
     public function send_answer(Request $request)
     {
         $time = round(microtime(true) * 1000);
-//        $user_id = auth('api')->user()->id;
-        $user_id = 11;
+        $user_id = auth('api')->user()->id;
+//        $user_id = 11;
         $question_id = $request->question_id;
         $answer = $request->answer;
 
 
         if (Result::where('user_id', $user_id)->where('question_id', $question_id)->exists()){ /** check for duplicate answers */
             return response()->json([
-                'status' => '400',
+                'status' => '116',
                 'message' => 'duplicate answer'
-            ]);
+            ],116);
         }
 
         $result = TonightQuestion::with('question.question_time')
@@ -162,20 +160,25 @@ class QuestionController extends Controller
                 'question send time' => $result->time,
                 'subtract' => $time - $result->time,
                 'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
-                'status' => 'timeout'
-            ]);
+                'status' => '117',
+                'message' => 'timeout'
+            ],117);
         } elseif ($answer == $result->question->correct_answer){ /** in-time answer. now check the answer */
                 /** correct answer */
                 $user_score = Score::where('user_id', $user_id)->first();
                 $user_score->score += $result->question->question_time->score; /** add score to user */
                 $user_score->save();
 
-            return Result::create([
+             Result::create([
                     'user_id' => $user_id,
                     'competition_id' => $result->question->competition_id,
                     'question_id' => $result->question->id,
                     'answer' => $request->answer
                 ]);
+             return response()->json([
+                 'status' => '118',
+                 'message' => 'correct answer'
+             ],118);
 
 
 //                return response()->json([
@@ -187,12 +190,17 @@ class QuestionController extends Controller
 //                ]);
             } else{ /** incorrect answer */
 
-            return Result::create([
+             Result::create([
                     'user_id' => $user_id,
                     'competition_id' => $result->question->competition_id,
                     'question_id' => $result->question->id,
                     'answer' => $request->answer
                 ]);
+            return response()->json([
+                'status' => '119',
+                'message' => 'incorrect answer',
+                'correct_answer' => $result->question->correct_answer
+            ],119);
 
 //                return response()->json([
 //                    'answer time' => $time,
@@ -210,8 +218,8 @@ class QuestionController extends Controller
     {
         $correct_answers = 0;
         $tonight_score = 0;
-        //        $user_id = auth('api')->user()->id;
-        $user_id = 11;
+                $user_id = auth('api')->user()->id;
+//        $user_id = 11;
         $results = Result::with('question.question_time')->where('user_id', $user_id)->whereDate('created_at', Carbon::today())->get();
         foreach ($results as $result){
             if ($result->answer == $result->question->correct_answer){
@@ -226,7 +234,7 @@ class QuestionController extends Controller
             'tonight_score' => $tonight_score,
             'total_score' => $total_score,
             'rank' => $rank
-        ]);
+        ],200);
 
     }
 
