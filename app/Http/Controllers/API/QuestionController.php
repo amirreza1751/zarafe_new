@@ -25,7 +25,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status' => '111',
                 'message' => 'you have answered all of your questions today.'
-            ],111);
+            ]);
         }
         $counter = 0;
         /**  باید چک بشه*/     $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->orWhere('used', '0')->count();
@@ -33,7 +33,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status' => '112',
                 'message' => 'tonight questions have been created.'
-            ],112);
+            ]);
         }
 
         for ($i=0;$i<10-$prepared_questions;$i++){
@@ -70,18 +70,18 @@ class QuestionController extends Controller
                     'status' => '113',
                     'message' => 'there is no question for you.',
                     'count' => $number
-                ], 113);
+                ]);
             }
             return response()->json([
                 'status' => '114',
                 'message' => 'only '. $number . ' question(s) found.',
                 'count' => $number
-            ], 200);
+            ]);
         } else {
             return response()->json([
                 'status' => '200',
                 'message' => 'your questions are ready.'
-            ], 200);
+            ]);
         }
 
     }
@@ -112,7 +112,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status' => '115',
                 'message' => 'no question found.'
-            ], 115);
+            ]);
         }
         $question->time = $time;
         $question->used = '1';
@@ -140,7 +140,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status' => '116',
                 'message' => 'duplicate answer'
-            ],116);
+            ]);
         }
 
         $result = TonightQuestion::with('question.question_time')
@@ -150,7 +150,7 @@ class QuestionController extends Controller
             return response()->json([
                 'status' => '400',
                 'message' => 'bad request'
-            ], 400);
+            ]);
         }
 
         if ($time - $result->time > $result->question->question_time->time*1000 + $result->question->video_length*1000){ /** out of time. */
@@ -162,7 +162,7 @@ class QuestionController extends Controller
                 'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
                 'status' => '117',
                 'message' => 'timeout'
-            ],117);
+            ]);
         } elseif ($answer == $result->question->correct_answer){ /** in-time answer. now check the answer */
                 /** correct answer */
                 $user_score = Score::where('user_id', $user_id)->first();
@@ -178,7 +178,7 @@ class QuestionController extends Controller
              return response()->json([
                  'status' => '118',
                  'message' => 'correct answer'
-             ],118);
+             ]);
 
 
 //                return response()->json([
@@ -200,7 +200,7 @@ class QuestionController extends Controller
                 'status' => '119',
                 'message' => 'incorrect answer',
                 'correct_answer' => $result->question->correct_answer
-            ],119);
+            ]);
 
 //                return response()->json([
 //                    'answer time' => $time,
@@ -234,7 +234,7 @@ class QuestionController extends Controller
             'tonight_score' => $tonight_score,
             'total_score' => $total_score,
             'rank' => $rank
-        ],200);
+        ]);
 
     }
 
