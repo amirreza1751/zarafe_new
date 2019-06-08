@@ -76,7 +76,7 @@ class QuestionController extends Controller
                 'status' => '114',
                 'message' => 'only '. $number . ' question(s) found.',
                 'count' => $number
-            ], 114);
+            ], 200);
         } else {
             return response()->json([
                 'status' => '200',
