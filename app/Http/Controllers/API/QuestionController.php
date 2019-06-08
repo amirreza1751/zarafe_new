@@ -16,8 +16,8 @@ class QuestionController extends Controller
 {
     public function prepare_questions()
     {
-        $user_id = auth('api')->user()->id;
-//        $user_id = 11;
+//        $user_id = auth('api')->user()->id;
+        $user_id = 1;
         /** create_user_score() creates this user score if is not created. */
         app('App\Http\Controllers\QuestionController')->create_user_score($user_id);
         $check_for_answer_limitation = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
