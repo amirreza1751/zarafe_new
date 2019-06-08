@@ -37,7 +37,8 @@
             "Tests\\": "tests/"
         },
         "classmap": [
-            "app/Http/Controllers/"
+            "app/Http/Controllers/",
+            "app/Http/Controllers/API/QuestionController.php"
         ]
     },
     "extra": {
