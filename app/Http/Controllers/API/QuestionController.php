@@ -28,8 +28,8 @@ class QuestionController extends Controller
             ]);
         }
         $counter = 0;
-        /**  باید چک بشه*/     $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->orWhere('used', '0')->count();
-        if (TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->orWhere('used', '0')->count() == 10){
+            $prepared_questions = TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->count();
+        if (TonightQuestion::where('user_id', $user_id)->whereDate('updated_at', Carbon::today())->count() == 10){
             return response()->json([
                 'status' => '200',
                 'message' => 'your questions are ready.'
