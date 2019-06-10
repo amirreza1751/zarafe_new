@@ -39,7 +39,7 @@ Route::group([
 ], function(){
     Route::get('/prepare_questions', 'API\QuestionController@prepare_questions');
     Route::get('/get_question', 'API\QuestionController@get_question');
-    Route::post('/send_answer', 'API\QuestionController@send_answer');
+    Route::get('/send_answer', 'API\QuestionController@send_answer');
     Route::get('/results', 'API\QuestionController@results');
     Route::get('/leader_board', 'API\ScoreController@leader_board');
 });
