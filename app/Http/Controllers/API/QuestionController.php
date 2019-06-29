@@ -228,12 +228,14 @@ class QuestionController extends Controller
             }
         }
         $total_score = Score::where('user_id', $user_id)->first()->score;
+        $total_answered_questions = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
         $rank = Score::where('user_id', $user_id)->first()->getRanking();
         return response()->json([
             'correct_answers' => $correct_answers,
             'tonight_score' => $tonight_score,
             'total_score' => $total_score,
-            'rank' => $rank
+            'rank' => $rank,
+            'total_questions' => $total_answered_questions
         ]);
 
     }
