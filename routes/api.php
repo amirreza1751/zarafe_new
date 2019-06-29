@@ -41,7 +41,7 @@ Route::group([
     Route::get('/get_question', 'API\QuestionController@get_question');
     Route::get('/send_answer', 'API\QuestionController@send_answer');
     Route::get('/results', 'API\QuestionController@results');
-    Route::get('/leader_board', 'API\ScoreController@leader_board');
+    Route::get('/leader_board', 'API\ScoreController@leaderboard');
 });
 
 Route::get('/test', 'API\QuestionController@test');
