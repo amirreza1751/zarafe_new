@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 
 class ScoreController extends Controller
 {
-    public function leader_board()
+    public function leaderboard()
     {
         $leader_board = Score::with('user')->orderBy('score', 'DESC')->get();
         return response()->json($leader_board, 200);
