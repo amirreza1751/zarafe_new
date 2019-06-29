@@ -235,7 +235,7 @@ class QuestionController extends Controller
             'tonight_score' => $tonight_score,
             'total_score' => $total_score,
             'rank' => $rank,
-            'total_questions' => $total_answered_questions
+            'answered_questions' => $total_answered_questions
         ]);
 
     }
