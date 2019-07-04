@@ -120,6 +120,11 @@ class QuestionController extends Controller
         $result = $question->question;
         unset($result['correct_answer']);
 
+        $current_question_number = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
+        $total_prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count();
+
+        $result['current_question_number'] = $current_question_number;
+        $result['total_prepared_questions'] = $total_prepared_questions;
         return response()->json($result, 200);
     }
 
