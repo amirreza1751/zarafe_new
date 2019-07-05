@@ -26,3 +26,4 @@ Route::post('/upload', function (Request $request) {
     $path = $request->file('avatar')->store('/public/avatars');
     return $path;
 });
+

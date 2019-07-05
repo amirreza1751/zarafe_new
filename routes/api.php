@@ -48,8 +48,9 @@ Route::get('/test', 'API\QuestionController@test');
 
 
 Route::group([
-    'middleware' => 'auth:api',
+//    'middleware' => 'auth:api',
     'prefix' => 'users'
 ], function(){
     Route::get('/view_profile', 'API\UserController@view_profile');
+    Route::post('/edit_profile', 'API\UserController@edit_profile');
 });

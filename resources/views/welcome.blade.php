@@ -81,8 +81,10 @@
                 <div class="title m-b-md">
                     Zarafe
                 </div>
-                <form action="/upload" method="post" enctype="multipart/form-data">
+                <form action="/api/users/edit_profile" method="post" enctype="multipart/form-data">
                     @csrf
+                    <input type="text" placeholder="name" name="name">
+                    <input type="text" name="lname">
                     <input type="file" name="avatar">
                     <input type="submit" value="send">
                 </form>
