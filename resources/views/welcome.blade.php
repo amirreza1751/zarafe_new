@@ -81,7 +81,11 @@
                 <div class="title m-b-md">
                     Zarafe
                 </div>
-
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="avatar">
+                    <input type="submit" value="send">
+                </form>
                 {{--<div class="links">--}}
                     {{--<a href="https://laravel.com/docs">Documentation</a>--}}
                     {{--<a href="https://laracasts.com">Laracasts</a>--}}
