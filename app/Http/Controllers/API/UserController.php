@@ -35,9 +35,11 @@ class UserController extends Controller
             $user->avatar = $path;
             if(isset($request->name)) $user->name = $request->name;
             if(isset($request->lname)) $user->lname = $request->lname;
+            if(isset($request->username)) $user->username = $request->username;
         } else {
             if(isset($request->name)) $user->name = $request->name;
             if(isset($request->lname)) $user->lname = $request->lname;
+            if(isset($request->username)) $user->username = $request->username;
         }
         $user->save();
         return response()->json([
