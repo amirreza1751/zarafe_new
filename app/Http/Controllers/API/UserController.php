@@ -24,7 +24,6 @@ class UserController extends Controller
 
     public function edit_profile(Request $request)
     {
-        return $request->all();
         $user = auth('api')->user();
 //        $user = User::find(14);
         $request->validate([
@@ -34,11 +33,11 @@ class UserController extends Controller
             $path = $request->file('avatar')->store('/public/avatars');
             $path = str_replace("public/","",$path);
             $user->avatar = $path;
-            $user->name = $request->name;
-            $user->lname = $request->lname;
+            if(isset($request->name)) $user->name = $request->name;
+            if(isset($request->lname)) $user->lname = $request->lname;
         } else {
-            $user->name = $request->name;
-            $user->lname = $request->lname;
+            if(isset($request->name)) $user->name = $request->name;
+            if(isset($request->lname)) $user->lname = $request->lname;
         }
         $user->save();
         return response()->json([
