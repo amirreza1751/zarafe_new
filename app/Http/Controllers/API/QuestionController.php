@@ -144,11 +144,17 @@ class QuestionController extends Controller
                 'message' => 'no question found.'
             ]);
         }
+        $current_question_number = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
+        $total_prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() + $current_question_number;
+
         return response()->json([
             'status' => 200,
             'question_id' => $result->question->id,
             'link_hls' => $result->question->link_hls,
             'link_dash' => $result->question->link_dash,
+            'current_question_number' => $current_question_number,
+            'total_prepared_questions' => $total_prepared_questions
+
         ], 200);
     }
 
