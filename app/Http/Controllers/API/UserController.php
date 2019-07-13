@@ -24,6 +24,7 @@ class UserController extends Controller
 
     public function edit_profile(Request $request)
     {
+        return $request->all();
         $user = auth('api')->user();
 //        $user = User::find(14);
         $request->validate([
