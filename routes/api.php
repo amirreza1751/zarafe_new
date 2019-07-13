@@ -38,10 +38,13 @@ Route::group([
     'middleware' => 'auth:api'
 ], function(){
     Route::get('/prepare_questions', 'API\QuestionController@prepare_questions');
-    Route::get('/get_question', 'API\QuestionController@get_question');
+    Route::get('/get_video', 'API\QuestionController@get_video');
+    Route::get('/get_question/{question_id}', 'API\QuestionController@get_question');
     Route::get('/send_answer', 'API\QuestionController@send_answer');
     Route::get('/results', 'API\QuestionController@results');
     Route::get('/leaderboard', 'API\ScoreController@leaderboard');
+    Route::get('/refresh', 'API\QuestionController@refresh');
+
 });
 
 Route::get('/test', 'API\QuestionController@test');

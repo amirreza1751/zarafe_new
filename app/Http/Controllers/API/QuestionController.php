@@ -8,6 +8,7 @@ use App\Score;
 use App\TonightQuestion;
 use App\UsedQuestion;
 use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
@@ -100,14 +101,16 @@ class QuestionController extends Controller
     }
 
 
-    public function get_question()
+    public function get_question($question_id)
     {
         $time = round(microtime(true) * 1000);
         $user_id = auth('api')->user()->id;
 //        $user_id = 11;
         $question = TonightQuestion::with('question')
             ->where('user_id', $user_id)
-            ->where('used', '0')->first();
+            ->where('used', '0')
+            ->where('question_id', $question_id)
+            ->first();
         if ($question == null){
             return response()->json([
                 'status' => '115',
@@ -118,14 +121,35 @@ class QuestionController extends Controller
         $question->used = '1';
         $question->save();
         $result = $question->question;
-        unset($result['correct_answer']);
+        unset($result['correct_answer'], $result['created_at'], $result['updated_at'], $result['link_hls'], $result['link_dash']);
 
         $current_question_number = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
         $total_prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() + $current_question_number;
 
         $result['current_question_number'] = $current_question_number;
         $result['total_prepared_questions'] = $total_prepared_questions;
+        $result['status'] = "200";
         return response()->json($result, 200);
+    }
+
+    public function get_video()
+    {
+        $user_id = auth('api')->user()->id;
+        $result = TonightQuestion::with('question')
+            ->where('user_id', $user_id)
+            ->where('used', '0')->first();
+        if ($result == null){
+            return response()->json([
+                'status' => '115',
+                'message' => 'no question found.'
+            ]);
+        }
+        return response()->json([
+            'status' => 200,
+            'question_id' => $result->question->id,
+            'link_hls' => $result->question->link_hls,
+            'link_dash' => $result->question->link_dash,
+        ], 200);
     }
 
 
@@ -256,5 +280,19 @@ class QuestionController extends Controller
         $user_id = 11;
         $prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('created_at', Carbon::today())->count();
         return $prepared_questions;
+    }
+
+    public function refresh()
+    {
+        $user_id = auth('api')->user()->id;
+
+        $v1 = UsedQuestion::where('user_id', $user_id)->delete();
+        $v2 = TonightQuestion::where('user_id', $user_id)->delete();
+        $v3 = Score::where('user_id', $user_id)->delete();
+        $v3 = Result::where('user_id', $user_id)->delete();
+        return response()->json([
+            'status' => '200',
+            'message' => 'Done.'
+        ]);
     }
 }
