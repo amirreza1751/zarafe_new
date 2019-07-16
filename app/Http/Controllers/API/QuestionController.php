@@ -196,7 +196,8 @@ class QuestionController extends Controller
                 'subtract' => $time - $result->time,
                 'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
                 'status' => '117',
-                'message' => 'timeout'
+                'message' => 'timeout',
+                'correct_answer' => $result->question->correct_answer
             ]);
         } elseif ($answer == $result->question->correct_answer){ /** in-time answer. now check the answer */
                 /** correct answer */
