@@ -213,7 +213,8 @@ class QuestionController extends Controller
                 ]);
              return response()->json([
                  'status' => '118',
-                 'message' => 'correct answer'
+                 'message' => 'correct answer',
+                 'correct_answer' => $result->question->correct_answer
              ]);
 
 
