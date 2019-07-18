@@ -81,13 +81,13 @@
                 <div class="title m-b-md">
                     Zarafe
                 </div>
-                <form action="/api/users/edit_profile" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <input type="text" placeholder="name" name="name">
-                    <input type="text" name="lname">
-                    <input type="file" name="avatar">
-                    <input type="submit" value="send">
-                </form>
+                {{--<form action="/api/users/edit_profile" method="post" enctype="multipart/form-data">--}}
+                    {{--@csrf--}}
+                    {{--<input type="text" placeholder="name" name="name">--}}
+                    {{--<input type="text" name="lname">--}}
+                    {{--<input type="file" name="avatar">--}}
+                    {{--<input type="submit" value="send">--}}
+                {{--</form>--}}
                 {{--<div class="links">--}}
                     {{--<a href="https://laravel.com/docs">Documentation</a>--}}
                     {{--<a href="https://laracasts.com">Laracasts</a>--}}

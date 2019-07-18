@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,9 @@ Route::group([
 });
 
 Route::get('/test', 'API\QuestionController@test');
+Route::get('/amir', function (){
+    Auth::logout();
+});
 
 
 Route::group([
