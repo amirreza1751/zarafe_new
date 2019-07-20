@@ -102,6 +102,8 @@ class QuestionController extends Controller
 
 
 
+
+
     public function get_question($question_id)
     {
         $time = round(microtime(true) * 1000);
@@ -133,6 +135,25 @@ class QuestionController extends Controller
         return response()->json($result, 200);
     }
 
+
+    public function initial_user_result($user_id, $question_id, $competition_id)
+    {
+        if ($user_id == null || $question_id == null || $competition_id == null)
+            return response()->json([
+                'status' => '400',
+                'message' => 'Bad request.'
+            ]);
+        else
+            return Result::create([
+                'answer' => '0',
+                'user_id' => $user_id,
+                'competition_id' => $competition_id,
+                'question_id' => $question_id
+            ]);
+
+    }
+
+
     public function get_video()
     {
         $user_id = auth('api')->user()->id;
@@ -145,6 +166,9 @@ class QuestionController extends Controller
                 'message' => 'no question found.'
             ]);
         }
+
+        app('App\Http\Controllers\API\QuestionController')->initial_user_result($user_id, $result->question->id, $result->question->competition_id);
+
         $current_question_number = TonightQuestion::where('user_id', $user_id)->where('used', '1')->whereDate('updated_at', Carbon::today())->count();
         $total_prepared_questions = TonightQuestion::where('user_id', $user_id)->where('used', '0')->count() + $current_question_number;
 
@@ -206,12 +230,17 @@ class QuestionController extends Controller
                 $user_score->score += $result->question->question_time->score; /** add score to user */
                 $user_score->save();
 
-             Result::create([
-                    'user_id' => $user_id,
-                    'competition_id' => $result->question->competition_id,
-                    'question_id' => $result->question->id,
-                    'answer' => $request->answer
-                ]);
+                $answer_result = Result::where('user_id', $user_id) /** save the answer result */
+                    ->where('question_id', $result->question->id)->first();
+                $answer_result->answer = $answer;
+                $answer_result->save();
+
+//             Result::create([
+//                    'user_id' => $user_id,
+//                    'competition_id' => $result->question->competition_id,
+//                    'question_id' => $result->question->id,
+//                    'answer' => $request->answer
+//                ]);
              return response()->json([
                  'status' => '118',
                  'message' => 'correct answer',
@@ -228,12 +257,17 @@ class QuestionController extends Controller
 //                ]);
             } else{ /** incorrect answer */
 
-             Result::create([
-                    'user_id' => $user_id,
-                    'competition_id' => $result->question->competition_id,
-                    'question_id' => $result->question->id,
-                    'answer' => $request->answer
-                ]);
+                    $answer_result = Result::where('user_id', $user_id) /** save the answer result */
+                    ->where('question_id', $result->question->id)->first();
+                    $answer_result->answer = $answer;
+                    $answer_result->save();
+
+//             Result::create([
+//                    'user_id' => $user_id,
+//                    'competition_id' => $result->question->competition_id,
+//                    'question_id' => $result->question->id,
+//                    'answer' => $request->answer
+//                ]);
             return response()->json([
                 'status' => '119',
                 'message' => 'incorrect answer',
