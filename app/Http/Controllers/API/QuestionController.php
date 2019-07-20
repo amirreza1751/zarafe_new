@@ -101,6 +101,7 @@ class QuestionController extends Controller
     }
 
 
+
     public function get_question($question_id)
     {
         $time = round(microtime(true) * 1000);
@@ -188,13 +189,13 @@ class QuestionController extends Controller
             ]);
         }
 
-        if ($time - $result->time > $result->question->question_time->time*1000 + $result->question->video_length*1000){ /** out of time. */
+        if ($time - $result->time > $result->question->question_time->time*1000){ /** out of time. */
 
             return response()->json([
                 'answer time' => $time,
                 'question send time' => $result->time,
                 'subtract' => $time - $result->time,
-                'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
+                'question time out' => $result->question->question_time->time*1000,
                 'status' => '117',
                 'message' => 'timeout',
                 'correct_answer' => $result->question->correct_answer
@@ -222,7 +223,7 @@ class QuestionController extends Controller
 //                    'answer time' => $time,
 //                    'question send time' => $result->time,
 //                    'subtract' => $time - $result->time,
-//                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
+//                    'question time out' => $result->question->question_time->time*1000,
 //                    'status' => 'correct answer'
 //                ]);
             } else{ /** incorrect answer */
@@ -243,7 +244,7 @@ class QuestionController extends Controller
 //                    'answer time' => $time,
 //                    'question send time' => $result->time,
 //                    'subtract' => $time - $result->time,
-//                    'question time out' => $result->question->question_time->time*1000 + $result->question->video_length*1000,
+//                    'question time out' => $result->question->question_time->time*1000,
 //                    'status' => 'incorrect answer'
 //                ]);
         }

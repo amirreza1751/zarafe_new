@@ -49,9 +49,7 @@ Route::group([
 });
 
 Route::get('/test', 'API\QuestionController@test');
-Route::get('/amir', function (){
-    Auth::logout();
-});
+
 
 
 Route::group([
