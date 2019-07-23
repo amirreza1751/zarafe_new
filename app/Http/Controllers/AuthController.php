@@ -106,6 +106,9 @@ class AuthController extends Controller
                 'message' => 'Unauthorized'
             ], 401);
 
+        /** create_user_score() creates this user score if is not created. */
+        app('App\Http\Controllers\API\QuestionController')->create_user_score($user->id);
+
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
