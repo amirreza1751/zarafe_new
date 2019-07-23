@@ -196,7 +196,7 @@ class QuestionController extends Controller
         $answer = $request->answer;
 
 
-        if (Result::where('user_id', $user_id)->where('question_id', $question_id)->exists()){ /** check for duplicate answers */
+        if (Result::where('user_id', $user_id)->where('question_id', $question_id)->where('answer', '!=', '0')->exists()){ /** check for duplicate answers */
             return response()->json([
                 'status' => '116',
                 'message' => 'duplicate answer'
