@@ -67,5 +67,5 @@ Route::group([
     'prefix' => 'posts'
 ], function(){
     Route::get('/', 'API\PostController@index');
-    Route::get('/{post}', 'API\PostController@show');
+    Route::get('/show/{id}', 'API\PostController@show');
 });
