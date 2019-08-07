@@ -58,5 +58,14 @@ Route::group([
 ], function(){
     Route::get('/view_profile', 'API\UserController@view_profile');
     Route::post('/edit_profile', 'API\UserController@edit_profile');
-    Route::get('/send_invitation_code', 'API\UserController@check_invite_code');
+    Route::post('/send_invitation_code', 'API\UserController@check_invite_code');
+});
+
+
+Route::group([
+//    'middleware' => 'auth:api',
+    'prefix' => 'posts'
+], function(){
+    Route::get('/', 'API\PostController@index');
+    Route::get('/{post}', 'API\PostController@show');
 });
