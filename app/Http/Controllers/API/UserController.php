@@ -81,6 +81,7 @@ class UserController extends Controller
                 ]);
 
         $invited_user->is_invited = '1';
+        $invited_user->invited_by = $inviter->phone_number;
         $invited_user->save();
 
         return response()->json([
