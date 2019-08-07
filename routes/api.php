@@ -69,3 +69,10 @@ Route::group([
     Route::get('/', 'API\PostController@index');
     Route::get('/show/{id}', 'API\PostController@show');
 });
+
+Route::group([
+//    'middleware' => 'auth:api',
+    'prefix' => 'rewards'
+], function(){
+    Route::get('/', 'API\RewardController@index');
+});
