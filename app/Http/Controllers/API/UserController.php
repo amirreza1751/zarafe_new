@@ -65,7 +65,7 @@ class UserController extends Controller
 
         $inviter = User::where('phone_number', $request->get('data'))->orWhere('username', $request->get('data'))->first();
         if ($inviter != null && $inviter->phone_number != $invited_user->phone_number){
-            $score = Score::where('user_id', $inviter->id)->where('competition_id', '1')->first();
+            $score = Score::where('user_id', $inviter->id)->first();
             if ($score != null){
                 $score->score += 3;
                 $score->save();

@@ -95,7 +95,8 @@ class QuestionController extends Controller
         } else {
             return Score::create([
                 'score' => '0',
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'competition_id' => '1'
             ]);
         }
     }
