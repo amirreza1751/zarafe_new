@@ -10,6 +10,6 @@ class RewardController extends Controller
 {
     public function index()
     {
-        return Reward::orderBy('rank', 'DESC')->get();
+        return Reward::orderBy('rank', 'ASC')->get();
     }
 }
