@@ -58,4 +58,5 @@ Route::group([
 ], function(){
     Route::get('/view_profile', 'API\UserController@view_profile');
     Route::post('/edit_profile', 'API\UserController@edit_profile');
+    Route::get('/send_invitation_code', 'API\UserController@check_invite_code');
 });
