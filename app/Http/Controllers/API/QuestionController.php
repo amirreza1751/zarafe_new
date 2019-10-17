@@ -139,6 +139,10 @@ class QuestionController extends Controller
 
     public function initial_user_result($user_id, $question_id, $competition_id)
     {
+        if (Result::where('user_id', $user_id)->where('question_id', $question_id)->exists())
+        {
+            return;
+        }
         if ($user_id == null || $question_id == null || $competition_id == null)
             return response()->json([
                 'status' => '400',
