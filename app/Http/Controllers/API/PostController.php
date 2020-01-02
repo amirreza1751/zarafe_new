@@ -14,7 +14,7 @@ class PostController extends Controller
         foreach ($posts as $post){
             $post->images = json_decode($post->images);
         }
-        $posts['status'] = '200';
+//        $posts['status'] = '200';
         return response()->json($posts);
     }
 
