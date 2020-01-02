@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::paginate(10);
+        $posts = Post::latest('created_at')->paginate(10);
         foreach ($posts as $post){
             $post->images = json_decode($post->images);
         }
