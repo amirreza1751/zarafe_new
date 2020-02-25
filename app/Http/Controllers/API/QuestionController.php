@@ -162,7 +162,7 @@ class QuestionController extends Controller
     public function get_video()
     {
         $user_id = auth('api')->user()->id;
-        $result = TonightQuestion::with('question')
+        $result = TonightQuestion::with('question.question_time')
             ->where('user_id', $user_id)
             ->where('used', '0')->first();
         if ($result == null){
@@ -180,6 +180,7 @@ class QuestionController extends Controller
         return response()->json([
             'status' => 200,
             'question_id' => $result->question->id,
+            'question_time' => $result->question->question_time->time,
             'link_hls' => $result->question->link_hls,
             'link_dash' => $result->question->link_dash,
             'current_question_number' => $current_question_number,
